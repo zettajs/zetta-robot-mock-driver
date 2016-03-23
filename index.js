@@ -7,7 +7,7 @@ var Robot = module.exports = function() {
   Device.call(this);
   this.direction = 0;
   this.speed = 0;
-  this.walkingStyle = 'normal'; // strut, skip, normal
+  this.walkingStyle = ''; // strut, skip, normal
   this.saying = '';
 };
 util.inherits(Robot, Device);
@@ -20,20 +20,21 @@ Robot.prototype.init = function(config) {
     .monitor('speed')
     .monitor('direction')
     .monitor('saying')
+    .monitor('walkingStyle')
     .when('closing-door', {allow: []})
     .when('closing-window', {allow: []})
     .when('opening-door', {allow: []})
     .when('opening-window', {allow: []})
     .when('sitting', {allow: ['stand']})
     .when('standing', {allow: ['sit', 'walk', 'open-door', 'close-door', 'open-window', 'close-window']})
-    .when('walking', {allow: ['stand']})
+    .when('walking', {allow: []})
     .map('close-door', this.closeDoor)
     .map('close-window', this.closeWindow)
     .map('open-door', this.openDoor)
     .map('open-window', this.openWindow)
     .map('sit', this.sit)
     .map('stand', this.stand)
-    .map('walk', this.walk, [{name: 'direction', type: 'text'}, {name: 'speed', type: 'text'}, {name: 'duration', type: 'text'}, {name: 'style', type: 'text'}, {name: 'warningMessage', type: 'text'}]);
+    .map('walk', this.walk, [{name: 'direction', type: 'text'}, {name: 'speed', type: 'text'}, {name: 'duration', type: 'text'}, {name: 'walkingStyle', type: 'text'}, {name: 'warningMessage', type: 'text'}]);
 };
 
 Robot.prototype.closeDoor = function(cb) {
@@ -57,17 +58,21 @@ Robot.prototype.stand = function(cb) {
   this.state = 'standing';
   cb();
 }
-Robot.prototype.walk = function(direction, speed, duration, style, warningMessage, cb) {
+Robot.prototype.walk = function(direction, speed, duration, walkingStyle, warningMessage, cb) {
   this.state = 'walking';
-  cb();
-
   this.direction = direction;
   this.speed = speed;
-  this.walkingStyle = style;
+  this.walkingStyle = walkingStyle;
+  this.saying = warningMessage;
+  cb();
 
   var self = this;
   setTimeout(function(){
-    self.call('stand');
+    self.walkingStyle = '';
+    self.saying = '';
+    self.speed = 0;
+    self.state = 'standing';
+    cb();
   }, duration);
 }
 
