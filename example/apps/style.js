@@ -14,9 +14,9 @@ module.exports = function(server) {
     server.observe([deviceQuery], function(device) {
       var states = Object.keys(device._allowed);
       for (i = 0; i < states.length; i++) {
-        device._allowed[states[i]].push('update-state-image');
+        device._allowed[states[i]].push('_update-state-image');
       }
-      device._transitions['update-state-image'] = {
+      device._transitions['_update-state-image'] = {
         handler: function(updatedStateImage, cb) {
           device.style = extend(device.style, {stateImage: updatedStateImage});
           cb();
@@ -26,10 +26,10 @@ module.exports = function(server) {
         ]
       };
 
-      device.call('update-state-image', stateImageForDevice(device));
+      device.call('_update-state-image', stateImageForDevice(device));
       var stateStream = device.createReadStream('state');
       stateStream.on('data', function(newState) {
-        device.call('update-state-image', stateImageForDevice(device));
+        device.call('_update-state-image', stateImageForDevice(device));
       });
     });
   });
