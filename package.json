@@ -1,6 +1,6 @@
 {
   "name": "zetta-robot-mock-driver",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Mock Zetta robot.",
   "main": "index.js",
   "scripts": {
