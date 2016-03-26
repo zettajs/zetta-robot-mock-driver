@@ -25,6 +25,8 @@ Robot.prototype.init = function(config) {
     .when('closing-window', {allow: []})
     .when('opening-door', {allow: []})
     .when('opening-window', {allow: []})
+    .when('sitting-down', {allow: []})
+    .when('standing-up', {allow: []})
     .when('sitting', {allow: ['stand']})
     .when('standing', {allow: ['sit', 'walk', 'open-door', 'close-door', 'open-window', 'close-window']})
     .when('walking', {allow: []})
@@ -34,6 +36,8 @@ Robot.prototype.init = function(config) {
     .map('open-window', this.openWindow)
     .map('sit', this.sit)
     .map('stand', this.stand)
+    .map('sit-down', this.sitDown)
+    .map('stand-up', this.standUp)
     .map('walk', this.walk, [{name: 'direction', type: 'text'}, {name: 'speed', type: 'text'}, {name: 'duration', type: 'text'}, {name: 'walkingStyle', type: 'text'}, {name: 'warningMessage', type: 'text'}]);
 };
 
@@ -50,12 +54,12 @@ Robot.prototype.openWindow = function(cb) {
   this._performLongOperation('opening-window', 'standing', TIMEOUT, cb);
 }
 Robot.prototype.sit = function(cb) {
-  this.state = 'sitting';
+  this._performLongOperation('sitting-down', 'sitting', TIMEOUT, cb);
   cb();
 }
 Robot.prototype.stand = function(cb) {
   this.speed = 0;
-  this.state = 'standing';
+  this._performLongOperation('standing-up', 'standing', TIMEOUT, cb);
   cb();
 }
 Robot.prototype.walk = function(direction, speed, duration, walkingStyle, warningMessage, cb) {
