@@ -38,16 +38,16 @@ Robot.prototype.init = function(config) {
 };
 
 Robot.prototype.closeDoor = function(cb) {
-  this._performLongOperation('closing-door', 'standing', TIMEOUT, cb);
+  this._performLongOperation('closing-door', 'finished-closing-door', 'standing', TIMEOUT, cb);
 }
 Robot.prototype.closeWindow = function(cb) {
-  this._performLongOperation('closing-window', 'standing', TIMEOUT, cb);
+  this._performLongOperation('closing-window', 'finished-closing-window', 'standing', TIMEOUT, cb);
 }
 Robot.prototype.openDoor = function(cb) {
-  this._performLongOperation('opening-door', 'standing', TIMEOUT, cb);
+  this._performLongOperation('opening-door', 'finished-opening-door', 'standing', TIMEOUT, cb);
 }
 Robot.prototype.openWindow = function(cb) {
-  this._performLongOperation('opening-window', 'standing', TIMEOUT, cb);
+  this._performLongOperation('opening-window', 'finished-opening-window', 'standing', TIMEOUT, cb);
 }
 Robot.prototype.sit = function(cb) {
   this.state = 'sitting';
@@ -76,12 +76,14 @@ Robot.prototype.walk = function(direction, speed, duration, walkingStyle, warnin
   }, duration);
 }
 
-Robot.prototype._performLongOperation = function(initState, finalState, delay, cb) {
+Robot.prototype._performLongOperation = function(initState, intermediateState, finalState, delay, cb) {
   this.state = initState;
   cb();
 
   var self = this;
   setTimeout(function(){
+    self.state = intermediateState;
+    cb();
     self.state = finalState;
     cb();
   }, delay);
