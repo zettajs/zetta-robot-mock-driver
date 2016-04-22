@@ -5,5 +5,6 @@ var style = require('./apps/style');
 zetta()
   .use(Robot)
   .use(style)
-  .link('http://demo.zettaapi.org')
+  .name('Corktown')
+  .link('http://stage.zettaapi.org')
   .listen(1337);

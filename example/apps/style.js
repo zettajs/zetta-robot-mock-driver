@@ -18,7 +18,11 @@ module.exports = function(server) {
       }
       device._transitions['_update-state-image'] = {
         handler: function(updatedStateImage, cb) {
-          device.style = extend(device.style, {stateImage: updatedStateImage});
+          device.style = extend(device.style, {properties: {
+            stateImage: {
+              url: updatedStateImage
+            }
+          }});
           cb();
         },
         fields: [
